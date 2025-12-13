@@ -1,0 +1,7 @@
+# Archivo de configuración para constantes de lógica de negocio.
+# NO almacenar secretos aquí.
+
+processing:
+  query_input: |
+    SELECT * FROM your_table_name_here
+  output_file: outputs/your_output_file_name.csv

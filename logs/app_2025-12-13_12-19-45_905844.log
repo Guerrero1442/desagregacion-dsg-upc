@@ -1,0 +1,8 @@
+2025-12-13 12:19:45.906 | INFO     | src.utils:setup_logging:46 - Configuración de logging inicializada.
+2025-12-13 12:19:45.907 | INFO     | __main__:main:18 - Iniciando la aplicación.
+2025-12-13 12:19:45.987 | INFO     | src.utils_db:get_db_connection:41 - Attempting to establish database connection.
+2025-12-13 12:19:46.102 | CRITICAL | src.utils_db:get_db_connection:58 - Error de archivador de Oracle (ORA-257): ORA-00257: Archiver error. Connect AS SYSDBA only until resolved.
+Help: https://docs.oracle.com/error-help/db/ora-00257/. La base de datos no puede aceptar nuevas conexiones. Contacte al DBA para resolver el problema.
+2025-12-13 12:19:46.102 | ERROR    | __main__:main:38 - Error de base de datos: Error de archivador de Oracle (ORA-257): ORA-00257: Archiver error. Connect AS SYSDBA only until resolved.
+Help: https://docs.oracle.com/error-help/db/ora-00257/. La base de datos no puede aceptar nuevas conexiones. Contacte al DBA para resolver el problema.
+2025-12-13 12:19:46.102 | INFO     | __main__:main:42 - La aplicación ha finalizado.

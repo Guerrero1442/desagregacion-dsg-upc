@@ -1,0 +1,16 @@
+[project]
+name = "desagregacion-dsg-upc"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "loguru>=0.7.3",
+    "oracledb>=3.4.1",
+    "pandas>=2.3.3",
+    "pydantic-settings>=2.12.0",
+    "pyright>=1.1.407",
+    "pyyaml>=6.0.3",
+    "ruff>=0.14.9",
+    "sqlalchemy>=2.0.45",
+]
