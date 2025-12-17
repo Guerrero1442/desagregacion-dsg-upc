@@ -79,7 +79,8 @@ def test_identificar_registros_correctos(settings_mock, sample_df):
 
     # Esperamos True solo para los registros 0 y 1
     expected_mask = pd.Series(
-        [True, True, False, False, False], name="CANTIDAD_PROCEDIMIENTO"
+        [True, True, False, False, False],
+        name=settings_mock.processing.column_desagregacion,
     )
 
     pd.testing.assert_series_equal(mask, expected_mask, check_names=False)
@@ -95,18 +96,18 @@ def test_desagregacion_completa_psicologia(settings_mock, sample_df):
 
     mask_a_procesar = rule.identificar(sample_df)
     df_a_procesar = sample_df[mask_a_procesar].copy()
+    df_resto = sample_df[~mask_a_procesar].copy()
 
     df_procesado = rule.ejecutar_desagregacion(df_a_procesar)
 
-    # --- Verificación Caso A (Cantidad 5) ---
+    df_final = pd.concat([df_resto, df_procesado])
+
+    assert len(df_final) == 22
     df_desagregado_a = df_procesado[df_procesado["OTRA_COLUMNA"] == "A"]
     assert len(df_desagregado_a) == 5
-    # Validar valores monetarios (5000 / 5 = 1000)
     assert all(df_desagregado_a["VALOR_NETO"] == 1000.0)
-    # Validar cantidad unitaria
     assert all(df_desagregado_a["CANTIDAD_PROCEDIMIENTO"] == 1)
 
-    # Validar fechas (Intervalo de 1 día)
     expected_dates_a = [
         pd.Timestamp("2025-01-01"),
         pd.Timestamp("2025-01-02"),
@@ -116,14 +117,10 @@ def test_desagregacion_completa_psicologia(settings_mock, sample_df):
     ]
     assert df_desagregado_a["FECHA_INICIO_TRATAMIENTO"].tolist() == expected_dates_a
 
-    # --- Verificación Caso B (Cantidad 14) ---
     df_desagregado_b = df_procesado[df_procesado["OTRA_COLUMNA"] == "B"]
     assert len(df_desagregado_b) == 14
-
-    # Validar valores monetarios (14000 / 14 = 1000)
     assert all(df_desagregado_b["VALOR_NETO"] == 1000.0)
 
-    # Validar las primeras fechas para asegurar el intervalo
     fechas_b = df_desagregado_b["FECHA_INICIO_TRATAMIENTO"].tolist()
     assert fechas_b[0] == pd.Timestamp("2025-02-01")
     assert fechas_b[1] == pd.Timestamp("2025-02-02")

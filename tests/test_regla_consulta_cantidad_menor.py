@@ -61,19 +61,19 @@ def test_identificar_registros_correctos(settings_mock, sample_df):
     rule = ReglaConsultaCantidadMenor()
     mask = rule.identificar(sample_df)
 
-    expected_mask = pd.Series([True, False, False, True], name="CANTIDAD_PROCEDIMIENTO")
+    expected_mask = pd.Series(
+        [True, False, False, True], name=settings_mock.processing.column_desagregacion
+    )
 
     pd.testing.assert_series_equal(mask, expected_mask, check_names=False)
-
-    assert mask.sum() == 2, "Debe identificar 2 filas para procesar"
-    assert mask.iloc[0], "Debe identificar la primera fila"
-    assert mask.iloc[3], "Debe identificar la última fila"
+    assert mask.sum() == 2
 
 
 def test_desagregacion_completa_de_consulta(settings_mock, sample_df):
     """
     Test de punta a punta que ejecuta la desagregación y valida el resultado.
     """
+    processing = settings_mock.processing
     rule = ReglaConsultaCantidadMenor()
 
     mask_a_procesar = rule.identificar(sample_df)
@@ -89,27 +89,30 @@ def test_desagregacion_completa_de_consulta(settings_mock, sample_df):
     df_desagregado_1 = df_procesado[df_procesado["OTRA_COLUMNA"] == "A"]
     assert len(df_desagregado_1) == 3
 
-    assert all(df_desagregado_1["VALOR_NETO"] == 1000.0)
+    assert all(df_desagregado_1[processing.columns_dinero[0]] == 1000.0)
 
-    assert all(df_desagregado_1["CANTIDAD_PROCEDIMIENTO"] == 1)
+    assert all(df_desagregado_1[processing.column_desagregacion] == 1)
 
     expected_dates_1 = [
         pd.Timestamp("2025-01-01"),
         pd.Timestamp("2025-01-11"),
         pd.Timestamp("2025-01-21"),
     ]
-    assert df_desagregado_1["FECHA_INICIO_TRATAMIENTO"].tolist() == expected_dates_1
+    assert df_desagregado_1[processing.column_fecha].tolist() == expected_dates_1
 
     df_desagregado_2 = df_procesado[df_procesado["OTRA_COLUMNA"] == "D"]
     assert len(df_desagregado_2) == 1
 
-    assert all(df_desagregado_2["VALOR_NETO"] == 1500.0)
+    assert all(df_desagregado_2[processing.columns_dinero[0]] == 1500.0)
 
-    assert all(df_desagregado_2["CANTIDAD_PROCEDIMIENTO"] == 1)
+    assert all(df_desagregado_2[processing.column_desagregacion] == 1)
 
     expected_dates_2 = [pd.Timestamp("2025-04-01")]
-    assert df_desagregado_2["FECHA_INICIO_TRATAMIENTO"].tolist() == expected_dates_2
+    assert df_desagregado_2[processing.column_fecha].tolist() == expected_dates_2
 
     assert len(df_resto) == 2
-    assert "CONSULTA CON CANTIDAD ALTA" in df_resto["DESCRIPCION_CUP"].values
-    assert "OTRO PROCEDIMIENTO" in df_resto["DESCRIPCION_CUP"].values
+    assert (
+        "CONSULTA CON CANTIDAD ALTA"
+        in df_resto[processing.column_descripcion_cups].values
+    )
+    assert "OTRO PROCEDIMIENTO" in df_resto[processing.column_descripcion_cups].values
