@@ -8,33 +8,6 @@ from desagregacion_dsg_upc.rules.consulta_psicologia_cantidad_menor_15 import (
 )
 
 
-# --- Mock de Settings ---
-class MockProcessingConfig:
-    def __init__(self):
-        self.column_descripcion_cups = "DESCRIPCION_CUP"
-        self.column_desagregacion = "CANTIDAD_PROCEDIMIENTO"
-        self.columns_dinero = ["VALOR_NETO"]
-        self.column_fecha = "FECHA_INICIO_TRATAMIENTO"
-
-
-class MockSettings:
-    def __init__(self):
-        self.processing = MockProcessingConfig()
-
-
-@pytest.fixture
-def settings_mock(monkeypatch):
-    """Fixture para mockear el objeto settings."""
-    mocked_settings = MockSettings()
-
-    monkeypatch.setattr(
-        "desagregacion_dsg_upc.rules.consulta_psicologia_cantidad_menor_15.settings",
-        mocked_settings,
-    )
-    monkeypatch.setattr("desagregacion_dsg_upc.rules.base.settings", mocked_settings)
-    return mocked_settings
-
-
 @pytest.fixture
 def sample_df() -> pd.DataFrame:
     """DataFrame de ejemplo para los tests de psicología."""
