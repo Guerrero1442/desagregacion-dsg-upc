@@ -9,8 +9,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy import exc as sqlalchemy_exc
 from sqlalchemy.engine import Connection, Engine
 
-from config.settings import settings
-from src.exceptions import ConfigError, DatabaseError
+from desagregacion_dsg_upc import ConfigError, DatabaseError, settings
 
 
 @contextmanager

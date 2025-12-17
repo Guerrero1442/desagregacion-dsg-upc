@@ -1,10 +1,13 @@
 import pandas as pd
 from loguru import logger
 
-from config.settings import load_config_yaml
-from src.exceptions import DatabaseError
-from src.utils import setup_logging
-from src.utils_db import fetch_data_in_chunks, get_db_connection
+from config.settings import settings
+from desagregacion_dsg_upc import (
+    DatabaseError,
+    fetch_data_in_chunks,
+    get_db_connection,
+    setup_logging,
+)
 
 
 def main():
@@ -12,8 +15,6 @@ def main():
     Punto de entrada principal de la aplicación.
     """
     setup_logging()
-    config = load_config_yaml()
-    config_processing = config["processing"]
 
     logger.info("Iniciando la aplicación.")
     dfs_chunk = []
@@ -26,7 +27,7 @@ def main():
             # result = connection.execute(text("SELECT 1 FROM DUAL"))
             # logger.info(f"Resultado de la consulta de prueba: {result.scalar_one()}")
             for chunk in fetch_data_in_chunks(
-                connection, config_processing["query_input"]
+                connection, settings.processing.query_input
             ):
                 dfs_chunk.append(chunk)
         df_desagregacion_db = pd.concat(dfs_chunk)
