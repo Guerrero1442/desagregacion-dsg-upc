@@ -68,5 +68,5 @@ class ReglaConsultaPsicologiaCantidadMayor15(ReglaDesagregacion):
             df_resultado[columna_valor_liquidado] = (
                 df_resultado[columna_valor_liquidado]
                 / df_resultado["divisor_valor_liquidado"]
-            ).round(0)
+            ).round(1)
         return df_resultado
