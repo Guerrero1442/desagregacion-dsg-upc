@@ -27,6 +27,8 @@ def settings_mock(monkeypatch):
         "desagregacion_dsg_upc.rules.consulta_cantidad_menor.settings",
         "desagregacion_dsg_upc.rules.consulta_psicologia_cantidad_menor_igual_15.settings",
         "desagregacion_dsg_upc.rules.consulta_psicologia_cantidad_mayor_15.settings",
+        "desagregacion_dsg_upc.rules.contiene_domicili.settings",
+        "desagregacion_dsg_upc.rules.contiene_curaci.settings",
         # "desagregacion_dsg_upc.rules.nueva_regla.settings",
     ]
 
