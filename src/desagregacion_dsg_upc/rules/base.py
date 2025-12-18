@@ -27,7 +27,7 @@ class ReglaDesagregacion(ABC):
 
         for col in columns_dinero:
             df_expanded[col] = (df_expanded[col] / df_expanded["divisor_costo"]).round(
-                1
+                0
             )
 
         dias_a_sumar = pd.to_timedelta(
@@ -36,7 +36,9 @@ class ReglaDesagregacion(ABC):
 
         df_expanded[column_fecha] = df_expanded[column_fecha] + dias_a_sumar
 
-        df_expanded[column_desagregar] = 1
+        df_expanded[settings.processing.column_desagregacion] = df_expanded[
+            "cantidad"
+        ].astype(int)
 
         return df_expanded
 

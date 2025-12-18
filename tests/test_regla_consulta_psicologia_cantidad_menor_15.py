@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 import pytest
 
-from desagregacion_dsg_upc.rules.consulta_psicologia_cantidad_menor_15 import (
+from desagregacion_dsg_upc.rules.consulta_psicologia_cantidad_menor_igual_15 import (
     ReglaConsultaPsicologiaCantidadMenor15,
 )
 
@@ -17,7 +17,7 @@ def sample_df() -> pd.DataFrame:
             "CONSULTA PSICOLOGIA CONTROL",  # Cumple: CONSULTA + PSICOLOGIA + <15
             "CONSULTA MEDICINA GENERAL",  # No Cumple: Falta PSICOLOGIA
             "TERAPIA FISICA",  # No Cumple: Falta CONSULTA y PSICOLOGIA
-            "CONSULTA PSICOLOGIA GRUPAL",  # No Cumple: Cantidad 15 (debe ser < 15)
+            "CONSULTA PSICOLOGIA GRUPAL",  # Cumple: Cantidad 15 (debe ser <= 15)
         ],
         "CANTIDAD_PROCEDIMIENTO": [
             5,
@@ -52,12 +52,12 @@ def test_identificar_registros_correctos(settings_mock, sample_df):
 
     # Esperamos True solo para los registros 0 y 1
     expected_mask = pd.Series(
-        [True, True, False, False, False],
+        [True, True, False, False, True],
         name=settings_mock.processing.column_desagregacion,
     )
 
     pd.testing.assert_series_equal(mask, expected_mask, check_names=False)
-    assert mask.sum() == 2
+    assert mask.sum() == 3
 
 
 def test_desagregacion_completa_psicologia(settings_mock, sample_df):
@@ -75,11 +75,11 @@ def test_desagregacion_completa_psicologia(settings_mock, sample_df):
 
     df_final = pd.concat([df_resto, df_procesado])
 
-    assert len(df_final) == 22
+    assert len(df_final) == 36
     df_desagregado_a = df_procesado[df_procesado["OTRA_COLUMNA"] == "A"]
     assert len(df_desagregado_a) == 5
     assert all(df_desagregado_a["VALOR_NETO"] == 1000.0)
-    assert all(df_desagregado_a["CANTIDAD_PROCEDIMIENTO"] == 1)
+    assert all(df_desagregado_a[settings_mock.processing.column_desagregacion] == 1)
 
     expected_dates_a = [
         pd.Timestamp("2025-01-01"),
@@ -88,13 +88,16 @@ def test_desagregacion_completa_psicologia(settings_mock, sample_df):
         pd.Timestamp("2025-01-04"),
         pd.Timestamp("2025-01-05"),
     ]
-    assert df_desagregado_a["FECHA_INICIO_TRATAMIENTO"].tolist() == expected_dates_a
+    assert (
+        df_desagregado_a[settings_mock.processing.column_fecha].tolist()
+        == expected_dates_a
+    )
 
     df_desagregado_b = df_procesado[df_procesado["OTRA_COLUMNA"] == "B"]
     assert len(df_desagregado_b) == 14
     assert all(df_desagregado_b["VALOR_NETO"] == 1000.0)
 
-    fechas_b = df_desagregado_b["FECHA_INICIO_TRATAMIENTO"].tolist()
+    fechas_b = df_desagregado_b[settings_mock.processing.column_fecha].tolist()
     assert fechas_b[0] == pd.Timestamp("2025-02-01")
     assert fechas_b[1] == pd.Timestamp("2025-02-02")
     assert fechas_b[-1] == pd.Timestamp("2025-02-14")

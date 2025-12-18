@@ -28,6 +28,7 @@ class ProcessingConfig(BaseModel):
     column_fecha: str
     column_desagregacion: str
     column_descripcion_cups: str
+    column_valor_liquidado: str
 
 
 class Settings(BaseSettings):

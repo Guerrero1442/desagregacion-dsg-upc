@@ -31,4 +31,6 @@ class ReglaConsultaCantidadMenor(ReglaDesagregacion):
 
         df["divisor_costo"] = df[settings.processing.column_desagregacion]
 
+        df["cantidad"] = 1
+
         return df

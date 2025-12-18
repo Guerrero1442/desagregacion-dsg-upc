@@ -7,6 +7,7 @@ class MockProcessingConfig:
         self.column_desagregacion = "CANTIDAD_PROCEDIMIENTO"
         self.columns_dinero = ["VALOR_NETO"]
         self.column_fecha = "FECHA_INICIO_TRATAMIENTO"
+        self.column_valor_liquidado = "VALOR_LIQUIDADO"
 
 
 class MockSettings:
@@ -24,7 +25,8 @@ def settings_mock(monkeypatch):
     modules_to_patch = [
         "desagregacion_dsg_upc.rules.base.settings",
         "desagregacion_dsg_upc.rules.consulta_cantidad_menor.settings",
-        "desagregacion_dsg_upc.rules.consulta_psicologia_cantidad_menor_15.settings",
+        "desagregacion_dsg_upc.rules.consulta_psicologia_cantidad_menor_igual_15.settings",
+        "desagregacion_dsg_upc.rules.consulta_psicologia_cantidad_mayor_15.settings",
         # "desagregacion_dsg_upc.rules.nueva_regla.settings",
     ]
 

@@ -7,8 +7,8 @@ from .base import ReglaDesagregacion
 
 class ReglaConsultaPsicologiaCantidadMenor15(ReglaDesagregacion):
     """
-    Aplica a: Consultas con cantidad procedimiento <= 6
-    Logica Fecha: Se espacian cada (30 / cantidad procedimiento) dias.
+    Aplica a: Consultas de Psicología con cantidad procedimiento <= 15
+    Logica Fecha: Se suma 1 dia por cada procedimiento
     """
 
     def identificar(self, df: pd.DataFrame) -> pd.Series:
@@ -24,7 +24,7 @@ class ReglaConsultaPsicologiaCantidadMenor15(ReglaDesagregacion):
             .str.contains("PSICOLOGIA", case=False, na=False)
         )
 
-        mask_cantidad = df[settings.processing.column_desagregacion] < 15
+        mask_cantidad = df[settings.processing.column_desagregacion] <= 15
 
         return mask_consulta & mask_psicologia & mask_cantidad
 
@@ -34,5 +34,7 @@ class ReglaConsultaPsicologiaCantidadMenor15(ReglaDesagregacion):
         df["intervalo_dias"] = 1
 
         df["divisor_costo"] = df[settings.processing.column_desagregacion]
+
+        df["cantidad"] = 1
 
         return df
