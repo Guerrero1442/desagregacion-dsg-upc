@@ -29,6 +29,7 @@ class ProcessingConfig(BaseModel):
     column_desagregacion: str
     column_descripcion_cups: str
     column_valor_liquidado: str
+    column_codigo_osi: str
 
 
 class Settings(BaseSettings):

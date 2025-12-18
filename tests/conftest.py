@@ -8,6 +8,7 @@ class MockProcessingConfig:
         self.columns_dinero = ["VALOR_NETO"]
         self.column_fecha = "FECHA_INICIO_TRATAMIENTO"
         self.column_valor_liquidado = "VALOR_LIQUIDADO"
+        self.column_codigo_osi = "CODIGO_OSI"
 
 
 class MockSettings:
@@ -29,6 +30,7 @@ def settings_mock(monkeypatch):
         "desagregacion_dsg_upc.rules.consulta_psicologia_cantidad_mayor_15.settings",
         "desagregacion_dsg_upc.rules.contiene_domicili.settings",
         "desagregacion_dsg_upc.rules.contiene_curaci.settings",
+        "desagregacion_dsg_upc.rules.contiene_terapia_codigo_osi.settings",
         # "desagregacion_dsg_upc.rules.nueva_regla.settings",
     ]
 
